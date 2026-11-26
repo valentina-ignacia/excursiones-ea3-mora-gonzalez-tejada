@@ -1,0 +1,83 @@
+RUTA AUSTRAL EXCURSIONES - PROYECTO BASE EA3 (TRABAJO EN PAREJA)
+=================================================================
+
+Ejecución: clase cl.duoc.excursiones.Launcher (o mvn javafx:run).
+Mientras no asignen su implementación de ExcursionDAO, la ventana se abre
+y el área de mensajes indica que aún no hay una implementación asignada.
+
+
+ESTRUCTURA
+----------
+cl.duoc.excursiones
+  Launcher, App              Inicio de la aplicación (no modificar).
+  model/                     Excursion, Trekking, Kayak, Asegurable (no modificar).
+  dao/                       ExcursionDAO y PersistenciaException (no modificar).
+  conexion/ConexionBD        Datos de conexión: COMPLETAR.
+  controller/MainController  Controlador de la ventana: asignar el DAO
+                             (marca "EA3"); no modificar el resto.
+resources/cl/duoc/excursiones/view
+  main-view.fxml             Ventana principal (no modificar).
+pom.xml                      Agregar el conector JDBC (marca "EA3").
+scripts/                     excursiones_mysql.sql y excursiones_oracle.sql:
+                             ejecuten el de su motor (no modificar).
+
+El proyecto NO incluye .gitignore ni README.md: los crean ustedes
+al subir el proyecto a GitHub (ver el enunciado).
+
+
+MODELO
+------
+Excursion (abstracta)
+  int getId() / void setId(int id)                    0 mientras no está almacenada.
+  String getCodigo() / setCodigo(String)              No nulo ni vacío.
+  int getParticipantes() / setParticipantes(int)      Entre 1 y 30.
+  double getDistanciaKm() / setDistanciaKm(double)    Mayor que cero.
+  String getTipo()                                    "Trekking" o "Kayak".
+  double calcularValorPersona()                       Valor por persona, en pesos.
+  double calcularValorTotal()                         Valor por persona x participantes.
+  Los set lanzan IllegalArgumentException con un mensaje si el dato es inválido.
+
+Trekking extends Excursion implements Asegurable
+  Trekking(String codigo, int participantes, double distanciaKm,
+           double desnivelMetros, boolean guiaBilingue, boolean seguroIncluido)
+  double getDesnivelMetros() / setDesnivelMetros(double)   Mayor que cero.
+  boolean isGuiaBilingue() / setGuiaBilingue(boolean)
+  boolean isSeguroIncluido() / setSeguroIncluido(boolean)
+  Valor por persona: $45.000; +30% si incluye guía bilingüe.
+
+Kayak extends Excursion
+  Kayak(String codigo, int participantes, double distanciaKm, double duracionHoras)
+  double getDuracionHoras() / setDuracionHoras(double)     Mayor que cero.
+  Valor por persona: $60.000; +15% si la duración supera 3 horas.
+
+Asegurable (interfaz)
+  boolean isSeguroIncluido()
+  void setSeguroIncluido(boolean)
+
+
+ACCESO A DATOS
+--------------
+ExcursionDAO (interfaz)
+  List<Excursion> obtenerTodos()   Todas las excursiones, cada una como Trekking
+                                   o Kayak, con todos sus datos y su id.
+  void insertar(Excursion x)       Guarda una excursión nueva (el id lo genera la BD).
+  void actualizar(Excursion x)     Modifica la excursión con el mismo id.
+  void eliminar(int id)            Elimina la excursión con ese id.
+  Todas lanzan PersistenciaException si la operación no puede completarse.
+
+PersistenciaException(String mensaje)
+PersistenciaException(String mensaje, Throwable causa)
+  La ventana muestra getMessage() en el área de mensajes.
+
+ConexionBD
+  static Connection getConnection() throws SQLException
+  Entrega una conexión abierta con los datos URL, USUARIO y CLAVE.
+  Quien la utiliza debe cerrarla.
+
+
+BASE DE DATOS
+-------------
+tipo_excursion (id_tipo, descripcion)       1 = Trekking, 2 = Kayak
+excursion      (id, id_tipo, codigo, participantes, distancia_km,
+                desnivel_metros, guia_bilingue, seguro_incluido,   <- solo Trekking
+                duracion_horas)                                    <- solo Kayak
