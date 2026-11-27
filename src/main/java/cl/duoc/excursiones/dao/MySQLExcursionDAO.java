@@ -55,6 +55,39 @@ public class MySQLExcursionDAO implements ExcursionDAO {
     }
 
     @Override
+    public void insertar(Excursion excursion) throws PersistenciaException {
+        String sql = (excursion instanceof Trekking)?INSERT_TREKKING:INSERT_KAYAK;
+
+        try(
+                Connection con = ConexionBD.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+        ){
+            //comunes
+            ps.setString(1,excursion.getCodigo());
+            ps.setInt(2,excursion.getParticipantes());
+            ps.setDouble(3, excursion.getDistanciaKm());
+
+            //trekking
+            if(excursion instanceof Trekking){
+                Trekking trekking = (Trekking) excursion;
+                ps.setDouble(4,trekking.getDesnivelMetros());
+                ps.setBoolean(5,trekking.isGuiaBilingue());
+                ps.setBoolean(6,trekking.isSeguroIncluido());
+                ps.setInt(7,1);
+
+            }else{
+                //kayak
+                Kayak kayak = (Kayak) excursion;
+                ps.setDouble(4,kayak.getDuracionHoras());
+                ps.setInt(5,2);
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al insertar excursion: " ,e);
+        }
+    }
+
+    @Override
     public void actualizar(Excursion excursion)
             throws PersistenciaException {
 
