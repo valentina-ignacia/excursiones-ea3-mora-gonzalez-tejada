@@ -1,6 +1,7 @@
 package cl.duoc.excursiones.controller;
 
 import cl.duoc.excursiones.dao.ExcursionDAO;
+import cl.duoc.excursiones.dao.MySQLExcursionDAO;
 import cl.duoc.excursiones.dao.PersistenciaException;
 import cl.duoc.excursiones.model.Excursion;
 import cl.duoc.excursiones.model.Kayak;
@@ -30,7 +31,7 @@ public class MainController {
     //      (por ejemplo: = new MiImplementacionDAO();).
     //      No es necesario modificar ninguna otra parte de esta clase.
     // =====================================================================
-    private final ExcursionDAO dao = null;
+    private final ExcursionDAO dao = new MySQLExcursionDAO();
 
     private static final Locale LOCALE_CL = Locale.forLanguageTag("es-CL");
 
