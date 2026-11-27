@@ -14,6 +14,10 @@ public class MySQLExcursionDAO implements ExcursionDAO {
     private static final String SELECT_ALL = "SELECT * FROM excursion";
     private static final String INSERT_TREKKING = "INSERT INTO excursion (codigo, participantes, distancia_km,desnivel_metros,guia_bilingue,seguro_incluido,id_tipo) VALUES (?,?,?,?,?,?,?)";
     private static final String INSERT_KAYAK = "INSERT INTO excursion (codigo, participantes, distancia_km,duracion_horas,id_tipo) VALUES (?,?,?,?,?)";
+    private static final String UPDATE_TREKKING = "UPDATE excursion SET codigo = ?, participantes = ?, distancia_km = ?,desnivel_metros = ?, guia_bilingue = ?, seguro_incluido = ? WHERE id = ?";
+    private static final String UPDATE_KAYAK = "UPDATE excursion SET codigo = ?, participantes = ?, distancia_km = ?, duracion_horas = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM excursion WHERE id = ?";
+
     //constructor vacío
     public MySQLExcursionDAO() {}
 
