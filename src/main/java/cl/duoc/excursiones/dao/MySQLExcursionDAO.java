@@ -109,11 +109,15 @@ public class MySQLExcursionDAO implements ExcursionDAO {
     }
 
     @Override
-    public void eliminar(int id)
-            throws PersistenciaException {
+    public void eliminar(int id) throws PersistenciaException {
+        try(Connection con = ConexionBD.getConnection();
+            PreparedStatement ps = con.prepareStatement(DELETE);
+        ){
+            ps.setInt(1,id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al eliminar excursion: " , e);
+        }
 
-        throw new PersistenciaException(
-                "Operación no implementada"
-        );
     }
 }
