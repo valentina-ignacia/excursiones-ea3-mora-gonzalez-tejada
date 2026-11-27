@@ -33,7 +33,7 @@ public class MySQLExcursionDAO implements ExcursionDAO {
             }
 
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al obtener excursiones: ", e);
+            throw new PersistenciaException("No fue posible obtener las excursiones.", e);
         }
 
         return excursiones;
